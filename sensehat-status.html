@@ -1,17 +1,40 @@
 <script type="text/javascript">
-    RED.nodes.registerType('sensehat-status',{
-        category: 'function',
-        color: '#a6bbcf',
-        defaults: {
-            name: {value:""}
-        },
-        inputs:1,
-        outputs:1,
-        icon: "file.png",
-        label: function() {
-            return this.name||"sensehat-status";
-        }
-    });
+	RED.nodes.registerType('sensehat-status', {
+		category : 'Raspberry Pi',
+		paletteLabel : "Sense Status",
+		color : "#c6dbef",
+		defaults : {
+		//  name: {value:""}
+		},
+		inputs : 1,
+		outputs : 0,
+		icon : "rpi.png",
+		align : "right",
+		label : function() {
+			return this.name || "Sense Status";
+		},
+		labelStyle : function() {
+			return this.name ? "node_label_italic" : "";
+		}
+	});
+	RED.nodes.registerType('sensehat-status-source', {
+		category : 'Raspberry Pi',
+		paletteLabel : "Sense Source",
+		color : "#c6dbef",
+		defaults : {
+		//  name: {value:""}
+		},
+		inputs : 1,
+		outputs : 1,
+		icon : "rpi.png",
+		align : "right",
+		label : function() {
+			return this.name || "Status Source";
+		},
+		labelStyle : function() {
+			return this.name ? "node_label_italic" : "";
+		}
+	});
 </script>
 
 <script type="text/x-red" data-template-name="sensehat-status">
@@ -23,4 +46,29 @@
 
 <script type="text/x-red" data-help-name="sensehat-status">
     <p>Raspberry PI SenseHat as a status display for Node-RED</p>
+	<p>Takes in four input channels to display an icon. The color of the icon 
+       changes depending on the message coming in. The expected 
+       <code>payload</code> is:</p>
+	<ul>
+		<li><code>index</code>: Number 1 to 4 for to select which quadrant of the SenseHat display</li>
+		<li><code>icon</code>: One of 'circle', 'square', 'bar', 'dash' or 'x'. 'x' in white color is
+		indicate 'no data' situation.</li>
+		<li><code>color</code>: Colow to use for rending the icon. Supports common color names and #RRGGBB hex.</li>
+	</ul>
+	<p>You can use the Status Source node to create these messages.</p>
+</script>
+
+<script type="text/x-red" data-template-name="sensehat-status-source">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-value"><i class="icon-tag"></i> >Value</label>
+        <input type="text" id="node-input-value" placeholder="Value">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="sensehat-status-source">
+    <p>SenseHat status display source node to handle the 2x2 display icons</p>
 </script>
