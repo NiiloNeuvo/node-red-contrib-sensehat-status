@@ -1,40 +1,76 @@
 <script type="text/javascript">
-	RED.nodes.registerType('sensehat-status', {
-		category : 'Raspberry Pi',
-		paletteLabel : "Sense Status",
-		color : "#c6dbef",
-		defaults : {
-		//  name: {value:""}
-		},
-		inputs : 1,
-		outputs : 0,
-		icon : "rpi.png",
-		align : "right",
-		label : function() {
-			return this.name || "Sense Status";
-		},
-		labelStyle : function() {
-			return this.name ? "node_label_italic" : "";
-		}
-	});
-	RED.nodes.registerType('sensehat-status-source', {
-		category : 'Raspberry Pi',
-		paletteLabel : "Sense Source",
-		color : "#c6dbef",
-		defaults : {
-		//  name: {value:""}
-		},
-		inputs : 1,
-		outputs : 1,
-		icon : "rpi.png",
-		align : "right",
-		label : function() {
-			return this.name || "Status Source";
-		},
-		labelStyle : function() {
-			return this.name ? "node_label_italic" : "";
-		}
-	});
+  RED.nodes.registerType('sensehat-status', {
+    category : 'Raspberry Pi',
+    paletteLabel : "Sense Status",
+    color : "#c6dbef",
+    defaults : {
+      "senseRotate" : {
+        value : 0,
+        required : false
+      },
+    },
+    inputs : 1,
+    outputs : 0,
+    icon : "rpi.png",
+    align : "right",
+    label : function() {
+      return this.name || "Sense Status";
+    },
+    labelStyle : function() {
+      return this.name ? "node_label_italic" : "";
+    }
+  });
+  RED.nodes.registerType('sensehat-status-source', {
+    category : 'Raspberry Pi',
+    paletteLabel : "Sense Source",
+    color : "#c6dbef",
+    defaults : {
+      "senseIndex" : {
+        value : "1",
+        required : true
+      },
+      "senseTopic" : {
+        value : "",
+        required : false
+      },
+      "sensePayload" : {
+        value : "",
+        required : false
+      },
+      "senseIcon" : {
+        value : "circle",
+        required : true
+      },
+      "senseValue1" : {
+        value : 0,
+        required : true,
+        validate : RED.validators.number()
+      },
+      "senseColor1" : {
+        value : "#FF0000",
+        required : true
+      },
+      "senseValue2" : {
+        value : 100,
+        required : true,
+        validate : RED.validators.number()
+      },
+      "senseColor2" : {
+        value : "#00FF00",
+        required : true
+      },
+    },
+    inputs : 1,
+    outputs : 1,
+    icon : "rpi.png",
+    align : "right",
+    label : function() {
+      return this.name || "Status Source";
+    },
+    labelStyle : function() {
+      return this.name ? "node_label_italic" : "";
+    }
+  });
 </script>
 
 <script type="text/x-red" data-template-name="sensehat-status">
@@ -42,20 +78,28 @@
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
+    <div class="form-row">
+        <label for="node-input-senseRotate"><i class="icon-tag"></i> Display rotate</label>
+        <select id="node-input-senseRotate">
+			<option selected>0</option>
+			<option>90</option>
+			<option>180</option>
+			<option>270</option>
+		</select>
+    </div>
 </script>
 
 <script type="text/x-red" data-help-name="sensehat-status">
     <p>Raspberry PI SenseHat as a status display for Node-RED</p>
-	<p>Takes in four input channels to display an icon. The color of the icon 
-       changes depending on the message coming in. The expected 
+	<p>Takes in four input channels to display an icon that varies in color. The expected 
        <code>payload</code> is:</p>
 	<ul>
-		<li><code>index</code>: Number 1 to 4 for to select which quadrant of the SenseHat display</li>
+		<li><code>index</code>: Number 1 to 4 for to select which quadrant to display the icon on</li>
 		<li><code>icon</code>: One of 'circle', 'square', 'bar', 'dash' or 'x'. 'x' in white color is
-		indicate 'no data' situation.</li>
-		<li><code>color</code>: Colow to use for rending the icon. Supports common color names and #RRGGBB hex.</li>
+		indicator of a 'no data' situation.</li>
+		<li><code>color</code>: Color to use for rendering the icon. Supports common color names and #RRGGBB hex.</li>
 	</ul>
-	<p>You can use the Status Source node to create these messages.</p>
+	<p>You can use the Status Source node to visualize a number as a color of an icon.</p>
 </script>
 
 <script type="text/x-red" data-template-name="sensehat-status-source">
@@ -64,8 +108,47 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-input-value"><i class="icon-tag"></i> >Value</label>
-        <input type="text" id="node-input-value" placeholder="Value">
+        <label for="node-input-senseIndex"><i class="icon-tag"></i> Sense HAT quadrant</label>
+        <select id="node-input-senseIndex">
+			<option selected>1</option>
+			<option>2</option>
+			<option>3</option>
+			<option>4</option>
+		</select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-senseTopic"><i class="icon-tag"></i> Topic</label>
+        <input type="text" id="node-input-senseTopic" placeholder="Source Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sensePayload"><i class="icon-tag"></i> Topic</label>
+        <input type="text" id="node-input-sensePayload" placeholder="Source Payload">
+    </div>
+    <div class="form-row">
+        <label for="node-input-senseIcon"><i class="icon-tag"></i> Icon</label>
+        <select id="node-input-senseIcon">
+			<option selected>circle</option>
+			<option>square</option>
+			<option>bar</option>
+			<option>dash</option>
+			<option>x</option>
+		</select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-senseValue1"><i class="icon-tag"></i> Value1</label>
+        <input type="text" id="node-input-senseValue1" placeholder="Source Value1">
+    </div>
+    <div class="form-row">
+        <label for="node-input-senseColor1"><i class="icon-tag"></i> Color1</label>
+        <input type="text" id="node-input-senseColor1" placeholder="Target Color 1">
+    </div>
+    <div class="form-row">
+        <label for="node-input-senseValue2"><i class="icon-tag"></i> Value2</label>
+        <input type="text" id="node-input-senseValue2" placeholder="Source Value2">
+    </div>
+    <div class="form-row">
+        <label for="node-input-senseColor2"><i class="icon-tag"></i> Color2</label>
+        <input type="text" id="node-input-senseColor2" placeholder="Target Color 2">
     </div>
 </script>
 
