@@ -4,7 +4,7 @@
 module.exports = function(RED) {
 	var sensehat = require( 'sense-hat-led' ); // SenseHat tooling
   var icons = require( './icons.js' ); // The icons
-  var gradient = require( './gradient.js' ); // Tool for deciding colors
+  var Gradient = require( './gradient.js' ); // Tool for deciding colors
 	var colorConvert = require('color-convert'); // Color conversion
 
 	function SenseHatStatus(config) {
@@ -68,50 +68,46 @@ module.exports = function(RED) {
 		RED.nodes.createNode(this, config);
 		var node = this;
 		// Color pickup logic
-     // var gradient = Gradient();
-     gradient.setDefault( "#808080" ); 
-     gradient.addPoint( config.senseValue1, config.senseColor1 );
-     gradient.addPoint( config.senseValue2, config.senseColor2 );
-     node.error( "Created gradient with "+ gradient.length() + " items.");
-		
-		node.status({
-			fill : "blue",
-			shape : "circle",
-			text : "Waiting for input."
-		});
+     var gradient = new Gradient();
+     gradient.setDefault( "#808080" );
+     gradient.create( config.senseGradient );
+     		
+     if( gradient.length() == 0 ) {
+       node.status({
+         fill : "red",
+         shape : "circle",
+         text : "Error processing Gradient"
+        });
+       return;
+     }
+     node.status({
+  		 fill : "blue",
+		 	 shape : "circle",
+			 text : "Waiting for input."
+		  });
 
 		node.on('input', function(msg) {
-			// Check that we care about the message
-			if ( config.senseTopic != "" && config.senseTopic != msg.topic ) {
-				node.status({
-					fill : "red",
-					shape : "circle",
-					text : "Topic mismatch '" + msg.topic +  "'."
-				});
-				return;
-			}
-			var value;
-			if ( config.sensePayload == "" ) {
-				value = parseInt( msg.payload, 10 );
-			} else if ( config.sensePayload in msg ) {
-				value = parseFloat( msg[config.sensePayload] );
-			} else if ( config.sensePayload in msg.payload ) {
-				value = parseFloat( msg.payload[config.sensePayload] );
+			var value = parseInt( msg.payload, 10 );
+			var color;
+			if( config.senseGradientType === "Gradient" ) {
+			  color = gradient.gradient( value );
 			} else {
-				node.status({
-					fill : "red",
-					shape : "circle",
-					text : "Payload mismatch '" + config.sensePayload +  "'."
-				});
-				return;
+        color = gradient.closest( value );
 			}
-			var color = "#FF0000"; // colorPicker.gradient( value );
-			node.status({
-				fill : color,
-				shape : "dot",
-				text : config.senseIndex + ": " + value + " -> " +
-					config.senseIcon
-			});
+      if( isNaN( value ) ) {
+        node.status({
+          fill : "red",
+          shape : "circle",
+          text : "msg.payload not number."
+        });
+      } else {
+			  node.status({
+				  fill : color,
+				  shape : "dot",
+				  text : config.senseIndex + ": " + value + " " +
+				  	config.senseIcon + " '" + color +"'"
+			  });
+			}
 			var repl = { 
 				payload: {
 					index: config.senseIndex,

@@ -11,8 +11,9 @@
 		"name": "Niilo Neuvo"
 	},
 	"dependencies": {
+		"color-convert": "^2.0.0",
 		"sense-hat-led": "^1.0.1",
-		"color-convert": "^2.0.0"
+		"should": "^13.2.3"
 	},
 	"scripts": {
 		"test": "mocha \"test/**/*_spec.js\""

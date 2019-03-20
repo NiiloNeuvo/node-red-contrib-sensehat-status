@@ -26,39 +26,22 @@
     color : "#c6dbef",
     defaults : {
       "senseIndex" : {
+        type : "num",
         value : "1",
         required : true
-      },
-      "senseTopic" : {
-        value : "",
-        required : false
-      },
-      "sensePayload" : {
-        value : "",
-        required : false
       },
       "senseIcon" : {
         value : "circle",
         required : true
       },
-      "senseValue1" : {
-        value : 0,
+      "senseGradient" : {
+        value : '[[-20,"white"],[0,"blue"],[20,"red"],[40,"orange"]]',
         required : true,
-        validate : RED.validators.number()
       },
-      "senseColor1" : {
-        value : "#FF0000",
+      "senseGradientType" : {
+        value : "Gradient",
         required : true
-      },
-      "senseValue2" : {
-        value : 100,
-        required : true,
-        validate : RED.validators.number()
-      },
-      "senseColor2" : {
-        value : "#00FF00",
-        required : true
-      },
+      }
     },
     inputs : 1,
     outputs : 1,
@@ -108,24 +91,16 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-input-senseIndex"><i class="icon-tag"></i> Sense HAT quadrant</label>
+        <label for="node-input-senseIndex"><i class="fa fa-th-large"></i> Position</label>
         <select id="node-input-senseIndex">
-			<option selected>1</option>
-			<option>2</option>
-			<option>3</option>
-			<option>4</option>
+			<option selected value="1">Top left</option>
+			<option value="2">Top right</option>
+			<option value="3">Bottom left</option>
+			<option value="4">Bottom right</option>
 		</select>
     </div>
     <div class="form-row">
-        <label for="node-input-senseTopic"><i class="icon-tag"></i> Topic</label>
-        <input type="text" id="node-input-senseTopic" placeholder="Source Topic">
-    </div>
-    <div class="form-row">
-        <label for="node-input-sensePayload"><i class="icon-tag"></i> Topic</label>
-        <input type="text" id="node-input-sensePayload" placeholder="Source Payload">
-    </div>
-    <div class="form-row">
-        <label for="node-input-senseIcon"><i class="icon-tag"></i> Icon</label>
+        <label for="node-input-senseIcon"><i class="fa fa-circle"></i> Icon</label>
         <select id="node-input-senseIcon">
 			<option selected>circle</option>
 			<option>square</option>
@@ -135,20 +110,15 @@
 		</select>
     </div>
     <div class="form-row">
-        <label for="node-input-senseValue1"><i class="icon-tag"></i> Value1</label>
-        <input type="text" id="node-input-senseValue1" placeholder="Source Value1">
+        <label for="node-input-senseGradient"><i class="fa fa-file-text-o"></i> Gradient</label>
+        <input type="text" id="node-input-senseGradient" placeholder="[[0, green],[100, #FF0000],...]">
     </div>
     <div class="form-row">
-        <label for="node-input-senseColor1"><i class="icon-tag"></i> Color1</label>
-        <input type="text" id="node-input-senseColor1" placeholder="Target Color 1">
-    </div>
-    <div class="form-row">
-        <label for="node-input-senseValue2"><i class="icon-tag"></i> Value2</label>
-        <input type="text" id="node-input-senseValue2" placeholder="Source Value2">
-    </div>
-    <div class="form-row">
-        <label for="node-input-senseColor2"><i class="icon-tag"></i> Color2</label>
-        <input type="text" id="node-input-senseColor2" placeholder="Target Color 2">
+        <label for="node-input-senseGradientType"><i class="fa fa-magic"></i> Color selection</label>
+        <select id="node-input-senseGradientType">
+			<option selected>Gradient</option>
+			<option>Closest</option>
+		</select>
     </div>
 </script>
 

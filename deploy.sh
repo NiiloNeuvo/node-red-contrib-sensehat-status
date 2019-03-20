@@ -20,7 +20,7 @@ DIR=.node-red
 TARGET=${USER}@${HOST}
 
 # Test, can't get it to work on local machine
-# npm test
+npm test
 
 # Package and pick up name
 PACKAGE=$(npm pack)

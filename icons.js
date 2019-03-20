@@ -19,6 +19,7 @@ var iconsFour = {
   "bar" : [ C0, C9, C9, C0, C0, C9, C9, C0, C0, C9, C9, C0, C0, C9, C9, C0, ],
   "dash" : [ C0, C0, C0, C0, C9, C9, C9, C9, C9, C9, C9, C9, C0, C0, C0, C0, ],
   "x" : [ C9, C0, C9, C0, C0, C9, C0, C0, C9, C0, C9, C0, C0, C0, C0, C0, ],
+  "t" : [ C9, C9, C9, C0, C0, C9, C0, C0, C0, C9, C0, C0, C0, C0, C0, C0, ],
 };
 
 multiply = function(color1, color2) {
